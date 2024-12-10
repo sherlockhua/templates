@@ -1,0 +1,55 @@
+{{>partial_header}}
+package {{packageName}}
+
+import (
+	"context"
+	"github.com/gin-gonic/gin"
+	{{#apiInfo}}{{#apis}}{{#imports}}
+	"{{import}}"
+	{{/imports}}{{/apis}}{{/apiInfo}}
+)
+
+
+{{#apiInfo}}{{#apis}}
+// {{classname}}Servicer defines the api actions for the {{classname}} service
+// This interface intended to stay up to date with the openapi yaml used to generate it,
+// while the service implementation can be ignored with the .openapi-generator-ignore file
+// and updated with the logic required for the API.
+type {{classname}}Servicer interface { {{#operations}}{{#operation}}
+	{{#isDeprecated}}
+	// Deprecated
+	{{/isDeprecated}}
+	{{operationId}}(context.Context{{#allParams}}, {{#isNullable}}*{{/isNullable}}{{dataType}}{{/allParams}}) ({{#returnType}}{{^isArray}}{{^returnTypeIsPrimitive}}{{^isResponseFile}}*{{/isResponseFile}}{{/returnTypeIsPrimitive}}{{/isArray}}{{{.}}}, {{/returnType}} error){{/operation}}{{/operations}}
+}{{/apis}}{{/apiInfo}}
+
+type ApiService interface { 
+{{#apiInfo}}{{#apis}}
+	// {{classname}}Servicer defines the api actions for the {{classname}} service
+	// This interface intended to stay up to date with the openapi yaml used to generate it,
+	// while the service implementation can be ignored with the .openapi-generator-ignore file
+	// and updated with the logic required for the API.
+	{{classname}}Servicer
+{{/apis}}{{/apiInfo}}
+}
+
+
+type Server struct {
+	router *gin.Engine
+	apiService ApiService
+}
+
+func NewServer(apiService ApiService) *Server {
+	server := &Server{
+		apiService: apiService,
+	}
+
+	{{#apiInfo}}{{#apis}}f{{classname}}Controller := New{{classname}}Controller(apiService)
+	{{/apis}}{{/apiInfo}}
+	server.router = NewRouter({{#apiInfo}}{{#apis}}f{{classname}}Controller{{^-last}}, {{/-last}}{{/apis}}{{/apiInfo}})
+	return server
+}
+
+
+func (s *Server) Run(addr string) error {
+    return s.router.Run(addr)
+}

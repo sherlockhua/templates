@@ -1,0 +1,35 @@
+{{>partial_header}}
+package {{packageName}}
+
+
+import (
+	"context"
+	{{#apiInfo}}{{#apis}}{{#imports}}
+	"{{import}}"
+	{{/imports}}{{/apis}}{{/apiInfo}}
+)
+
+
+{{#apiInfo}}{{#apis}}
+// {{classname}}Servicer defines the api actions for the {{classname}} service
+// This interface intended to stay up to date with the openapi yaml used to generate it,
+// while the service implementation can be ignored with the .openapi-generator-ignore file
+// and updated with the logic required for the API.
+{{/apis}}{{/apiInfo}}
+type ApiServiceImp struct { 
+}
+
+{{#apiInfo}}{{#apis}}
+//{{classname}}Servicer
+{{#operations}}
+	{{#operation}}
+	{{#isDeprecated}}
+	// Deprecated
+	{{/isDeprecated}}
+func (p *ApiServiceImp) {{operationId}}(ctx context.Context{{#allParams}}, {{paramName}} {{#isNullable}}*{{/isNullable}}{{dataType}}{{/allParams}}) ({{#returnType}}result {{^isArray}}{{^returnTypeIsPrimitive}}{{^isResponseFile}}*{{/isResponseFile}}{{/returnTypeIsPrimitive}}{{/isArray}}{{{.}}}, {{/returnType}}err error) {
+	return 
+}
+
+{{/operation}}
+{{/operations}}
+{{/apis}}{{/apiInfo}}
