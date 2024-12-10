@@ -12,5 +12,13 @@ import (
 
 
 func main() {
-	
+	addrs := ":8080"
+	app := fx.New(
+		{{packageName}}.Module,
+		fx.Invoke(func(server *{{packageName}}.Server) error {
+			go server.Run(addrs)
+			return nil
+		}),
+	)
+	app.Run()
 }

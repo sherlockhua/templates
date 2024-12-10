@@ -4,6 +4,7 @@ package {{packageName}}
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/fx"
 	{{#apiInfo}}{{#apis}}{{#imports}}
 	"{{import}}"
 	{{/imports}}{{/apis}}{{/apiInfo}}
@@ -53,3 +54,9 @@ func NewServer(apiService ApiService) *Server {
 func (s *Server) Run(addr string) error {
     return s.router.Run(addr)
 }
+
+
+var Module = fx.Module("server",
+	fx.Provide(NewServer),
+	fx.Provide(NewApiService),
+)

@@ -19,6 +19,12 @@ import (
 type ApiServiceImp struct { 
 }
 
+
+func NewApiService()ApiService {
+	return &ApiServiceImp{}
+}
+
+
 {{#apiInfo}}{{#apis}}
 //{{classname}}Servicer
 {{#operations}}
