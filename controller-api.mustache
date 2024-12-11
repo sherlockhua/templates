@@ -3,9 +3,8 @@ package {{packageName}}
 
 {{#operations}}
 import (
-	{{#hasBodyParams}}
-
 	"github.com/gin-gonic/gin"
+	{{#hasBodyParams}}
 	{{/hasBodyParams}}
 	{{#isBodyParam}}
 	    {{^required}}
@@ -215,7 +214,7 @@ func (c *{{classname}}Controller) {{nickname}}(ctx *gin.Context) {
 		{{paramName}}Param = {{#isNullable}}&{{/isNullable}}param
 	} else {
 		{{#required}}
-		c.errorHandler(w, r, &RequiredError{"{{baseName}}"}, nil)
+		c.errorHandler(ctx &RequiredError{"{{baseName}}"})
 		return
 		{{/required}}
 	}
@@ -237,7 +236,7 @@ func (c *{{classname}}Controller) {{nickname}}(ctx *gin.Context) {
 		{{paramName}}Param = {{#isNullable}}&{{/isNullable}}param
 	} else {
 		{{#required}}
-		c.errorHandler(w, r, &RequiredError{Field: "{{baseName}}"}, nil)
+		c.errorHandler(ctx, &RequiredError{Field: "{{baseName}}"})
 		return
 		{{/required}}
 		{{^required}}
@@ -265,7 +264,7 @@ func (c *{{classname}}Controller) {{nickname}}(ctx *gin.Context) {
 		{{paramName}}Param = {{#isNullable}}&{{/isNullable}}param
 	} else {
 		{{#required}}
-		c.errorHandler(w, r, &RequiredError{Field: "{{baseName}}"}, nil)
+		c.errorHandler(ctx, &RequiredError{Field: "{{baseName}}"})
 		return
 		{{/required}}
 		{{^required}}
@@ -293,7 +292,7 @@ func (c *{{classname}}Controller) {{nickname}}(ctx *gin.Context) {
 		{{paramName}}Param = {{#isNullable}}&{{/isNullable}}param
 	} else {
 		{{#required}}
-		c.errorHandler(w, r, &RequiredError{Field: "{{baseName}}"}, nil)
+		c.errorHandler(ctx, &RequiredError{Field: "{{baseName}}"})
 		return
 		{{/required}}
 		{{^required}}
@@ -321,7 +320,7 @@ func (c *{{classname}}Controller) {{nickname}}(ctx *gin.Context) {
 		{{paramName}}Param = {{#isNullable}}&{{/isNullable}}param
 	} else {
 		{{#required}}
-		c.errorHandler(w, r, &RequiredError{Field: "{{baseName}}"}, nil)
+		c.errorHandler(ctx, &RequiredError{Field: "{{baseName}}"})
 		return
 		{{/required}}
 		{{^required}}
@@ -349,7 +348,7 @@ func (c *{{classname}}Controller) {{nickname}}(ctx *gin.Context) {
 		{{paramName}}Param = {{#isNullable}}&{{/isNullable}}param
 	} else {
 		{{#required}}
-		c.errorHandler(w, r, &RequiredError{Field: "{{baseName}}"}, nil)
+		c.errorHandler(ctx, &RequiredError{Field: "{{baseName}}"})
 		return
 		{{/required}}
 		{{^required}}
@@ -377,7 +376,7 @@ func (c *{{classname}}Controller) {{nickname}}(ctx *gin.Context) {
 		{{paramName}}Param = {{#isNullable}}&{{/isNullable}}param
 	} else {
 		{{#required}}
-		c.errorHandler(w, r, &RequiredError{Field: "{{baseName}}"}, nil)
+		c.errorHandler(ctx, &RequiredError{Field: "{{baseName}}"})
 		return
 		{{/required}}
 		{{^required}}
