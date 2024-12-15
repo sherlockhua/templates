@@ -37,9 +37,9 @@ const errMsgMinValueConstraint = "provided parameter is not respecting minimum v
 const errMsgMaxValueConstraint = "provided parameter is not respecting maximum value constraint"
 
 // NewRouter creates a new router for any number of api routers
-func NewRouter(routers ...Router) *gin.Engine{
+func NewRouter(apiService ApiService, routers ...Router) *gin.Engine{
 	router := gin.Default()
-
+	apiService.InstallMiddleware(router)
 	for _, api := range routers {
 		for _, route := range api.Routes() {
 			switch route.Method {

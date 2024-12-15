@@ -1,0 +1,31 @@
+mysql:
+  host: "localhost"
+  port: 3306
+  username: "root"
+  password: ""
+  dbname: "metaphysics"
+  charset: "utf8mb4"
+  connect_timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+redis:
+  host: "localhost"
+  port: 6379
+  password: "password"
+  db: 0
+  connect_timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+task:
+  thread_num: 2
+
+logger:
+  filename: "./logs/metaphysics.log"
+  err_filename: "./logs/metaphysics.err.log"
+  access_filename: "./logs/metaphysics.access.log"
+  log_level: "Debug"
+
+server:
+  listen_addr: ":8080"

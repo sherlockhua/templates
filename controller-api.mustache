@@ -4,6 +4,8 @@ package {{packageName}}
 {{#operations}}
 import (
 	"github.com/gin-gonic/gin"
+	"time"
+	"github.com/sherlockhua/koala/logs"
 	{{#hasBodyParams}}
 	{{/hasBodyParams}}
 	{{#isBodyParam}}
@@ -69,6 +71,21 @@ func (c *{{classname}}Controller) Routes() Routes {
 // Deprecated
 {{/isDeprecated}}
 func (c *{{classname}}Controller) {{nickname}}(ctx *gin.Context) {
+	var (
+		errCall error
+		codeCall int 
+		resultCall interface{}
+		startTime = time.Now()
+		logger logs.Logger
+	)
+	defer func() {
+		logger.WithFields(logs.Fields{
+			"code": codeCall,
+			"errCall": errCall,
+			"response": resultCall,
+			"cost": time.Since(startTime).Milliseconds(),
+		}).Accessf(ctx.Request.Context(), "process")
+	}()
 	{{#hasFormParams}}
 	{{#isMultipart}}
 	 if err := ctx.Request.ParseMultipartForm(32 << 20); err!= nil {
@@ -608,7 +625,12 @@ func (c *{{classname}}Controller) {{nickname}}(ctx *gin.Context) {
 	{{/isArray}}
 	{{/isBodyParam}}
 	{{/allParams}}
-	{{#returnType}}result, {{/returnType}}errCall := c.service.{{nickname}}(ctx.Request.Context(){{#allParams}}, {{paramName}}Param{{/allParams}})
+	logger = logs.WithFields(logs.Fields{
+	"method": "{{nickname}}",
+	{{#allParams}}"{{paramName}}":{{paramName}}Param, {{/allParams}}
+	})
+	{{#returnType}}resultCall, {{/returnType}}codeCall,errCall = c.service.{{nickname}}(ctx.Request.Context(){{#allParams}}, {{paramName}}Param{{/allParams}})
+	
 	// If an error occurred, encode the error with the status code
 	if errCall != nil {
 		c.errorHandler(ctx, errCall)
@@ -616,7 +638,7 @@ func (c *{{classname}}Controller) {{nickname}}(ctx *gin.Context) {
 	}
 	
 	{{#returnType}}
-	ctx.JSON(http.StatusOK, result)
+	ctx.JSON(http.StatusOK, resultCall)
 	{{/returnType}}
 
 	{{^returnType}}

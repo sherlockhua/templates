@@ -4,6 +4,8 @@ package {{packageName}}
 
 import (
 	"context"
+	"github.com/sherlockhua/koala/middleware/logid"
+	"github.com/gin-gonic/gin"
 	{{#apiInfo}}{{#apis}}{{#imports}}
 	"{{import}}"
 	{{/imports}}{{/apis}}{{/apiInfo}}
@@ -25,6 +27,17 @@ func NewApiService()ApiService {
 }
 
 
+func (p *ApiServiceImp) InstallMiddleware(engine *gin.Engine) {
+	// Add middleware here
+	//engine.Use(gin.Logger())
+    //engine.Use(gin.Recovery())
+    //engine.Use(cors.Default())
+    //engine.Use(gzip.Gzip(gzip.DefaultCompression))
+    //engine.Use(jwt.AuthMiddleware(jwt.New(jwt.SigningMethodHS256, []byte("your_secret_key"))))
+    //engine.Use(httprate.Limit(httprate.NewLimiter(httprate.Every(time.Minute), 100)))
+	engine.Use(logid.LogIDMiddleware())
+}
+
 {{#apiInfo}}{{#apis}}
 //{{classname}}Servicer
 {{#operations}}
@@ -32,10 +45,12 @@ func NewApiService()ApiService {
 	{{#isDeprecated}}
 	// Deprecated
 	{{/isDeprecated}}
-func (p *ApiServiceImp) {{operationId}}(ctx context.Context{{#allParams}}, {{paramName}} {{#isNullable}}*{{/isNullable}}{{dataType}}{{/allParams}}) ({{#returnType}}result {{^isArray}}{{^returnTypeIsPrimitive}}{{^isResponseFile}}*{{/isResponseFile}}{{/returnTypeIsPrimitive}}{{/isArray}}{{{.}}}, {{/returnType}}err error) {
+func (p *ApiServiceImp) {{operationId}}(ctx context.Context{{#allParams}}, {{paramName}} {{#isNullable}}*{{/isNullable}}{{dataType}}{{/allParams}}) ({{#returnType}}result {{^isArray}}{{^returnTypeIsPrimitive}}{{^isResponseFile}}*{{/isResponseFile}}{{/returnTypeIsPrimitive}}{{/isArray}}{{{.}}}, {{/returnType}}code int, err error) {
 	return 
 }
 
 {{/operation}}
 {{/operations}}
 {{/apis}}{{/apiInfo}}
+
+

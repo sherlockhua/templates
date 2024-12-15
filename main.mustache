@@ -2,8 +2,11 @@
 package main
 
 import (
-	"log"
 	"go.uber.org/fx"
+	"github.com/gin-gonic/gin"
+	"github.com/sherlockhua/koala/logs"
+	"github.com/sherlockhua/koala/config"
+	"github.com/sherlockhua/koala/env"
 	{{PROJECT}}
 	{{packageName}} "{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/{{sourceFolder}}"
 )
@@ -12,11 +15,22 @@ import (
 
 
 func main() {
-	addrs := ":8080"
+	if env.IsOnline() {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	
+	filename := "./configs/config.yml"
 	app := fx.New(
+		fx.Provide(
+			func() config.ConfigFile {
+					return config.ConfigFile(filename) // 这里提供你需要的字符串依赖
+			},
+		),
 		{{packageName}}.Module,
-		fx.Invoke(func(server *{{packageName}}.Server) error {
-			go server.Run(addrs)
+		logs.Module,
+		config.Module,
+		fx.Invoke(func(server *{{packageName}}.Server,  conf *config.Config,logger logs.Logger) error {
+			go server.Run(conf.Server.ListenAddr)
 			return nil
 		}),
 	)

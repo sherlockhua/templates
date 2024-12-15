@@ -5,6 +5,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
+	
 	{{#apiInfo}}{{#apis}}{{#imports}}
 	"{{import}}"
 	{{/imports}}{{/apis}}{{/apiInfo}}
@@ -20,7 +21,7 @@ type {{classname}}Servicer interface { {{#operations}}{{#operation}}
 	{{#isDeprecated}}
 	// Deprecated
 	{{/isDeprecated}}
-	{{operationId}}(context.Context{{#allParams}}, {{#isNullable}}*{{/isNullable}}{{dataType}}{{/allParams}}) ({{#returnType}}{{^isArray}}{{^returnTypeIsPrimitive}}{{^isResponseFile}}*{{/isResponseFile}}{{/returnTypeIsPrimitive}}{{/isArray}}{{{.}}}, {{/returnType}} error){{/operation}}{{/operations}}
+	{{operationId}}(context.Context{{#allParams}}, {{#isNullable}}*{{/isNullable}}{{dataType}}{{/allParams}}) ({{#returnType}}{{^isArray}}{{^returnTypeIsPrimitive}}{{^isResponseFile}}*{{/isResponseFile}}{{/returnTypeIsPrimitive}}{{/isArray}}{{{.}}}, {{/returnType}} int,error){{/operation}}{{/operations}}
 }{{/apis}}{{/apiInfo}}
 
 type ApiService interface { 
@@ -31,6 +32,8 @@ type ApiService interface {
 	// and updated with the logic required for the API.
 	{{classname}}Servicer
 {{/apis}}{{/apiInfo}}
+
+	InstallMiddleware(engine *gin.Engine)
 }
 
 
@@ -46,7 +49,7 @@ func NewServer(apiService ApiService) *Server {
 
 	{{#apiInfo}}{{#apis}}f{{classname}}Controller := New{{classname}}Controller(apiService)
 	{{/apis}}{{/apiInfo}}
-	server.router = NewRouter({{#apiInfo}}{{#apis}}f{{classname}}Controller{{^-last}}, {{/-last}}{{/apis}}{{/apiInfo}})
+	server.router = NewRouter(apiService, {{#apiInfo}}{{#apis}}f{{classname}}Controller{{^-last}}, {{/-last}}{{/apis}}{{/apiInfo}})
 	return server
 }
 
