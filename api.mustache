@@ -11,7 +11,7 @@ import (
 	{{/imports}}{{/apis}}{{/apiInfo}}
 )
 
-
+var _ = &reflect.Value{}
 {{#apiInfo}}{{#apis}}
 // {{classname}}Servicer defines the api actions for the {{classname}} service
 // This interface intended to stay up to date with the openapi yaml used to generate it,

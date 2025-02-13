@@ -7,5 +7,6 @@ gen:
 	rm -rf $(destdir)/go/*_service.go
 	cp -r configs $(destdir)/
 	sed -i 's#github.com/GIT_USER_ID/GIT_REPO_ID/go#$(last_part)#g' ./$(destdir)/main.go
+	sed -i 's#github.com/GIT_USER_ID'
 gen2:
 	openapi-generator generate   -g go-gin-server  -i ./pet.yaml -o output

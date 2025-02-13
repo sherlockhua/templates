@@ -21,6 +21,10 @@ import (
 )
 {{/operations}}
 
+{{#imports}}
+var _ = &reflect.Value{}
+{{/imports}}
+
 // {{classname}}Controller binds http requests to an api service and writes the service results to the http response
 type {{classname}}Controller struct {
 	service {{classname}}Servicer
