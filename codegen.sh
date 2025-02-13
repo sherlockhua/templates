@@ -66,7 +66,16 @@ fi
 echo "module_name: $module_name"
 echo "idl_filename: $idl_filename"
 
+#backup impl.go
+if [ -f "$module_name/go/impl.go" ]; then
+   mv "$module_name/go/impl.go" "$module_name/go/impl.go.bak"
+fi
+
 openapi-generator generate --template-dir ./  -g go-server  -i "$idl_filename" -o "$module_name"
+
+if [ -f "$module_name/go/impl.go.bak" ]; then
+   mv "$module_name/go/impl.go.bak" "$module_name/go/impl.go"
+fi
 
 rm -rf $module_name/go/*_service.go
 cp -r configs $module_name/
