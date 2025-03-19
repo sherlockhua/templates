@@ -124,4 +124,9 @@ done
 cp $module_name/script/build.sh $module_name/
 chmod +x $module_name/build.sh
 
+# create directory for generated code
+mkdir -p $module_name/internal/domain
+mkdir -p $module_name/internal/infra/repository
+mkdir -p $module_name/internal/application
+
 
