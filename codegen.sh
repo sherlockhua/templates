@@ -128,5 +128,5 @@ chmod +x $module_name/build.sh
 mkdir -p $module_name/internal/domain
 mkdir -p $module_name/internal/infra/repository
 mkdir -p $module_name/internal/application
-
+cp .gitignore $module_name/
 
